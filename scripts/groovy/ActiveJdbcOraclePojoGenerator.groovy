@@ -1,5 +1,5 @@
 /**
- * ActiveJDBC POJO Generator script extension for Oracle databases
+ * ActiveJDBC POJO Generator script extension for Intellij or DataGrip
  * Author: Ulisses Ricardo (urssilva@hotmail.com)
  * IDE: Intellij 2016.2, DataGrip
  * Description: Save the script on the "Extensions" folder.
