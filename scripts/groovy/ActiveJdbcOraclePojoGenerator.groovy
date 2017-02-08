@@ -2,7 +2,8 @@
  * ActiveJDBC POJO Generator script extension for Oracle databases
  * Author: Ulisses Ricardo (urssilva@hotmail.com)
  * IDE: Intellij 2016.2, DataGrip
- * Description: Right Click <TABLE> -> Scripted Extensions -> ActiveJdbcOraclePojoGenerator.groovy
+ * Description: Save the script on the "Extensions" folder.
+ * Right Click <TABLE> -> Scripted Extensions -> ActiveJdbcOraclePojoGenerator.groovy
  * The generated code will be copied to the clipboard
  * Tested with Oracle 11g
  */
