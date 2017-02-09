@@ -1,14 +1,15 @@
 /**
- * ActiveJDBC POJO Generator script extension for Oracle databases
+ * ActiveJDBC POJO Generator script extension for Intellij or DataGrip
  * Author: Ulisses Ricardo (urssilva@hotmail.com)
  * IDE: Intellij 2016.2, DataGrip
  * Description: Save the script on the "Extensions" folder.
  * Right Click <TABLE> -> Scripted Extensions -> ActiveJdbcOraclePojoGenerator.groovy
- * The generated code will be copied to the clipboard
+ * The generated code will be copied to the clipboard and can be saved to the selected folder
  * Tested with Oracle 11g
  */
 
 NEWLINE = System.getProperty("line.separator")
+SEPARATOR = File.separator
 SPACING = "    "
 CLASS_CONVERTION = 0
 FIELD_CONVERTION = 1
@@ -18,6 +19,8 @@ IMPORT_IDX = 1
 GENERATE_FIELDS = false;
 
 buffer = new StringBuilder()
+
+def fileName = null
 SELECTION.each {
     if (it.class.canonicalName == "com.intellij.database.psi.DbTableImpl") {
         def importsToAppend = []
@@ -27,6 +30,8 @@ SELECTION.each {
 
         tableName = it.getName();
         className = parseScreamingSneakCaseToCamelCase(tableName, CLASS_CONVERTION)
+
+        fileName = className + ".java"
 
         columns = it.getDbChildren(com.intellij.database.psi.DbColumn.class, com.intellij.database.model.ObjectKind.COLUMN)
         columns.each { c ->
@@ -50,29 +55,29 @@ SELECTION.each {
             getter = ""
             setter = ""
             if (fieldJavaType[FIELD_TYPE_IDX] == "Object") {
-                getter = "public ${fieldJavaType[FIELD_TYPE_IDX]} get${fieldName.capitalize()}() {" + NEWLINE +
-                        "${SPACING}return get(\"${columnName}\");" + NEWLINE +
-                        "}"
+                getter = "${SPACING}public ${fieldJavaType[FIELD_TYPE_IDX]} get${fieldName.capitalize()}() {" + NEWLINE +
+                        "${SPACING}${SPACING}return get(\"${columnName}\");" + NEWLINE +
+                        "${SPACING}}"
 
-                setter = "public void set${fieldName.capitalize()}(${fieldJavaType[FIELD_TYPE_IDX]} ${fieldName}) {" + NEWLINE +
-                        "${SPACING}set(\"${columnName}\", ${fieldName});" + NEWLINE +
-                        "}"
+                setter = "${SPACING}public void set${fieldName.capitalize()}(${fieldJavaType[FIELD_TYPE_IDX]} ${fieldName}) {" + NEWLINE +
+                        "${SPACING}${SPACING}set(\"${columnName}\", ${fieldName});" + NEWLINE +
+                        "${SPACING}}"
             } else if (fieldJavaType[FIELD_TYPE_IDX] == "byte[]") {
-                getter = "public ${fieldJavaType[FIELD_TYPE_IDX]} get${fieldName.capitalize()}() {" + NEWLINE +
-                        "${SPACING}return getBytes(\"${columnName}\");" + NEWLINE +
-                        "}"
+                getter = "${SPACING}public ${fieldJavaType[FIELD_TYPE_IDX]} get${fieldName.capitalize()}() {" + NEWLINE +
+                        "${SPACING}${SPACING}return getBytes(\"${columnName}\");" + NEWLINE +
+                        "${SPACING}}"
 
-                setter = "public void set${fieldName.capitalize()}(${fieldJavaType[FIELD_TYPE_IDX]} ${fieldName}) {" + NEWLINE +
-                        "${SPACING}set(\"${columnName}\", ${fieldName});" + NEWLINE +
-                        "}"
+                setter = "${SPACING}public void set${fieldName.capitalize()}(${fieldJavaType[FIELD_TYPE_IDX]} ${fieldName}) {" + NEWLINE +
+                        "${SPACING}${SPACING}set(\"${columnName}\", ${fieldName});" + NEWLINE +
+                        "${SPACING}}"
             } else {
-                getter = "public ${fieldJavaType[FIELD_TYPE_IDX]} get${fieldName.capitalize()}() {" + NEWLINE +
-                        "${SPACING}return get${fieldJavaType[FIELD_TYPE_IDX]}(\"${columnName}\");" + NEWLINE +
-                        "}"
+                getter = "${SPACING}public ${fieldJavaType[FIELD_TYPE_IDX]} get${fieldName.capitalize()}() {" + NEWLINE +
+                        "${SPACING}${SPACING}return get${fieldJavaType[FIELD_TYPE_IDX]}(\"${columnName}\");" + NEWLINE +
+                        "${SPACING}}"
 
-                setter = "public void set${fieldName.capitalize()}(${fieldJavaType[FIELD_TYPE_IDX]} ${fieldName}) {" + NEWLINE +
-                        "${SPACING}set${fieldJavaType[FIELD_TYPE_IDX]}(\"${columnName}\", ${fieldName});" + NEWLINE +
-                        "}"
+                setter = "${SPACING}public void set${fieldName.capitalize()}(${fieldJavaType[FIELD_TYPE_IDX]} ${fieldName}) {" + NEWLINE +
+                        "${SPACING}${SPACING}set${fieldJavaType[FIELD_TYPE_IDX]}(\"${columnName}\", ${fieldName});" + NEWLINE +
+                        "${SPACING}}"
             }
             gettersToAppend << getter
             settersToAppend << setter
@@ -82,7 +87,7 @@ SELECTION.each {
         buffer.append("import org.javalite.activejdbc.Model;").append(NEWLINE)
         buffer.append("import org.javalite.activejdbc.annotations.Table;").append(NEWLINE)
         importsToAppend.toUnique().each { i ->
-            buffer.append(SPACING).append(i).append(NEWLINE)
+            buffer.append(i).append(NEWLINE)
         }
         buffer.append(NEWLINE)
 
@@ -110,8 +115,6 @@ SELECTION.each {
         buffer.append("}")
     }
 }
-
-CLIPBOARD.set(buffer.toString())
 
 def getJavaType(dataType, dataPrecision, dataScale) {
     if (dataType.matches("CHAR|CHARACTER|LONG|STRING|VARCHAR|VARCHAR2")) {
@@ -175,3 +178,12 @@ def parseScreamingSneakCaseToCamelCase(name, type) {
         fieldNameArray.join();
     }
 }
+
+CLIPBOARD.set(buffer.toString())
+
+FILES.chooseDirectoryAndSave("Select location", fileName, new com.intellij.util.Consumer<File>() {
+    void consume(File destFolder) {
+        def destFile = new File(destFolder.path + SEPARATOR + fileName)
+        destFile.write(buffer.toString())
+    }
+})
