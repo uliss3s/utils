@@ -1,6 +1,8 @@
 # utils
 Generic utilitary codes
 
-# scripts.groovy.ActiveJdbcOraclePojoGenerator
+# ActiveJdbcOraclePojoGenerator
 
-# scripts.groovy.Extract-Java-Fields-From-ResultSet.groovy
+# Extract-Java-Fields-From-ResultSet.groovy
+
+# SQL-Select-Statements.sql.groovy
