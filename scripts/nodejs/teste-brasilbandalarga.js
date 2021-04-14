@@ -1,3 +1,8 @@
+/*
+Código utilitário para realizar o teste banda larga do site https://www.brasilbandalarga.com.br e salvá-lo em PDF.
+O teste será feito no servidor mais próximo detectado pelo site.
+ */
+
 const puppeteer = require('puppeteer');
 
 (async () => {
@@ -10,7 +15,6 @@ const puppeteer = require('puppeteer');
 
     await page.waitForFunction('document.querySelector(\'#btnIniciar\').innerText === \'INICIAR NOVO TESTE\'', { timeout: 0 });
 
-    // Esperar 5 segundos
     await new Promise((resolve, reject) => setTimeout(resolve, 2000));
 
     const dataAtual = new Date();

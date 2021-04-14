@@ -1,6 +1,6 @@
 /*
 Código utilitário para realizar o teste banda larga do site https://beta.simet.nic.br/ e salvá-lo em PDF.
-O primeiro teste é na cidade mais próxima detectada pelo site. O segundo é feito em São Paulo.
+O primeiro teste é no servidor mais próximo detectado pelo site. O segundo é feito em São Paulo.
 
 tag id localidade: dropdownLocalitySelectorButton
  */
